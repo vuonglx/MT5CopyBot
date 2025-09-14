@@ -1,0 +1,49 @@
+[
+    {
+        "profile_name": "Main Account (ICMarkets)",
+        "master_login": "12345678",
+        "master_password": "MasterPassword123",
+        "master_server": "ICMarkets-MT5",
+        "slave_login": "87654321",
+        "slave_password": "SlavePassword456",
+        "slave_server": "ICMarkets-MT5-2",
+        "check_interval_seconds": 3.0,
+        "xauusd_checked": true,
+        "btcusd_checked": false,
+        "btcusd_deviation": 100.0,
+        "custom_symbols_list": [
+            {
+                "symbol": "EURUSD",
+                "deviation": 1.0
+            }
+        ],
+        "stop_loss_percent": 25.0,
+        "take_profit_percent": 50.0,
+        "trailing_drawdown_percent": 10.0,
+        "master_stop_loss_percent": 40.0,
+        "min_price_distance": 2.5,
+        "telegram_bot_token": "YOUR_TELEGRAM_BOT_TOKEN_HERE",
+        "telegram_chat_id": "YOUR_TELEGRAM_CHAT_ID_HERE"
+    },
+    {
+        "profile_name": "Demo Test (Exness)",
+        "master_login": "99988877",
+        "master_password": "DemoPassword",
+        "master_server": "Exness-MT5Trial",
+        "slave_login": "11122233",
+        "slave_password": "TestPassword",
+        "slave_server": "Exness-MT5Trial2",
+        "check_interval_seconds": 5.0,
+        "xauusd_checked": true,
+        "btcusd_checked": true,
+        "btcusd_deviation": 150.0,
+        "custom_symbols_list": [],
+        "stop_loss_percent": 30.0,
+        "take_profit_percent": 100.0,
+        "trailing_drawdown_percent": 15.0,
+        "master_stop_loss_percent": 50.0,
+        "min_price_distance": 3.0,
+        "telegram_bot_token": "",
+        "telegram_chat_id": ""
+    }
+]
