@@ -1,62 +1,72 @@
-# Bot Copy Trade cho MetaTrader 5
+# Advanced MT5 Copy Trading Bot
 
-Đây là một công cụ copy trade mạnh mẽ được viết bằng Python, giúp bạn tự động sao chép các giao dịch từ một tài khoản MT5 (Master) sang một tài khoản MT5 khác (Slave) với nhiều tính năng quản lý rủi ro nâng cao.
+This is a powerful, automated copy trading tool for MetaTrader 5, developed in Python. It is designed to efficiently and accurately replicate trades from a master account to a slave account, incorporating a multi-layered, robust risk management system.
+
+The bot features an intuitive Graphical User Interface (GUI) built with Tkinter, allowing users to easily configure, monitor, and control all operations without needing to modify the source code directly.
 
 
 
-## Tính năng Chính ✨
+## ✨ Key Features
 
-### Giao diện & Theo dõi
-* **Giao diện Trực quan:** Dễ dàng cài đặt và quản lý mọi thứ trên một cửa sổ duy nhất.
-* **Dashboard Thời gian thực:** Theo dõi Vốn, Lời/Lỗ ($ và %), và Số lệnh đang mở của tài khoản Slave ngay trên giao diện.
-* **Quản lý Profile:** Lưu và chuyển đổi giữa các cặp tài khoản Master-Slave khác nhau một cách nhanh chóng.
-* **Thông báo Telegram:** Nhận thông báo tức thì về các hoạt động quan trọng.
+### GUI & Monitoring
+* **Intuitive Interface:** Easily set up and manage all parameters from a single window.
+* **Real-time Dashboard:** Monitor the slave account's live Equity, floating P/L (in $ and %), and the total number of open positions directly on the GUI.
+* **Profile Management:** Quickly save and switch between different master-slave account configurations using a `mt5.json` file.
+* **Telegram Notifications:** Get instant alerts for critical events and status updates.
+* **Detailed Logging:** All activities are logged to a `bot_log.txt` file for easy tracking and debugging.
 
-### Sao chép Thông minh & Tối ưu
-* **Cơ chế Tối ưu:** Bot chỉ giám sát Master và chỉ kết nối đến Slave khi có thay đổi, giúp giảm độ trễ và hoạt động hiệu quả.
-* **Tính Lot theo Tỷ lệ Vốn:** Tự động điều chỉnh khối lượng giao dịch phù hợp với số vốn của bạn.
-* **Đồng bộ SL/TP:** Tự động cập nhật Stop Loss và Take Profit theo tài khoản Master.
-* **Ánh xạ Symbol:** Dễ dàng sao chép giữa các sàn có tên sản phẩm khác nhau (ví dụ: `XAUUSD` và `GOLD`).
+### Smart & Optimized Copying
+* **Efficient Sync Mechanism:** The bot primarily monitors the master account and only connects to the slave account when a change (open, close, or modify trade) is detected. This significantly reduces latency and system load.
+* **Proportional Lot Sizing:** Automatically calculates trade volume for the slave account based on the equity ratio, ensuring consistent risk management.
+* **Accurate Trade Mapping:** Uses the `deal_id` returned after a trade is executed to retrieve the exact `position_id`, eliminating the risk of mapping to the wrong trade.
+* **SL/TP Synchronization:** Automatically updates Stop Loss and Take Profit on slave positions if they are modified on the master account.
+* **Flexible Symbol Mapping:** Easily copy trades between brokers that use different instrument names (e.g., `XAUUSD` on one broker and `GOLD` on another).
 
-### Quản lý Rủi ro Toàn diện 🛡️
-1.  **Dừng theo P/L:** Tự động dừng bot và đóng mọi lệnh khi tài khoản đạt ngưỡng Lời/Lỗ mong muốn.
-2.  **Giới hạn Volume Tối đa:** Kiểm soát rủi ro trên từng lệnh, không cho phép vào lệnh với khối lượng quá lớn so với vốn.
-3.  **Giãn Lệnh:** Tránh sao chép dồn dập khi Master nhồi lệnh, chỉ vào lệnh khi có khoảng cách giá đủ an toàn.
-4.  **Giới hạn Số lệnh:** Đảm bảo số lệnh trên tài khoản của bạn không bao giờ nhiều hơn tài khoản Master.
-5.  **Đồng bộ Toàn diện:** Nếu Master đóng hết lệnh, bot sẽ tự động đóng tất cả các lệnh còn sót lại trên tài khoản của bạn.
+### Comprehensive Risk Management 🛡️
+1.  **Global P/L Stop:** Automatically closes all positions and stops the bot if the slave account's total profit or loss reaches a predefined percentage of the initial equity.
+2.  **Max Volume Cap:** Controls risk on every single trade by capping the maximum lot size based on a rule (e.g., max 0.05 lots per $100 of equity).
+3.  **Order Spacing Filter:** Prevents over-trading by ignoring new master trades if their entry price is too close to the last copied trade on the same symbol.
+4.  **Position Count Limit:** Ensures the number of open positions on your account never exceeds the number of positions on the master account.
+5.  **"Master Flat" Failsafe:** As a final layer of protection, if the master account has zero open positions, the bot will automatically close any and all remaining positions on the slave account to ensure a perfect sync.
 
-## Yêu cầu
-1.  **Python 3.9+** đã được cài đặt.
-2.  **Phần mềm MetaTrader 5** (bản desktop) đã được cài đặt và đang chạy.
-3.  Các thư viện Python cần thiết.
+## Requirements
+1.  **Python 3.9+** installed.
+2.  **MetaTrader 5 Desktop Terminal** installed and running.
+3.  The necessary Python libraries.
 
-## Hướng dẫn Cài đặt & Sử dụng 🚀
+## 🚀 Installation & Usage Guide
 
-### Bước 1: Cài đặt Thư viện
-Mở Command Prompt (CMD) hoặc Terminal và chạy lệnh sau:
+### Step 1: Install Required Libraries
+Open a Command Prompt (CMD) or Terminal in the bot's directory and run this single command to install all dependencies:
 ```bash
-pip install MetaTrader5 requests
-```
+pip install -r requirements.txt
+````
 
-### Bước 2: Cấu hình Bắt buộc trong Code
-Mở file bot (`.py`) bằng một trình soạn thảo code (như VS Code, Notepad++). Tìm và **thay đổi đường dẫn** trong dòng sau để trỏ đến file `terminal64.exe` của bạn:
+### Step 2: **CRITICAL** - Configure MT5 Path
+
+Open the bot's Python file (`.py`) with a code editor (like VS Code, Notepad++, etc.). Find and **change the path** in the following line to point to your `terminal64.exe` or `terminal.exe` file:
+
 ```python
 MT5_TERMINAL_PATH = r"C:\Program Files\MetaTrader 5\terminal64.exe" 
 ```
 
-### Bước 3: Chạy Bot
-Lưu file lại và chạy bot bằng lệnh:
+### Step 3: Run the Bot
+
+Save the file and run the bot from your terminal:
+
 ```bash
-python ten_file_bot_cua_ban.py
+python your_bot_file_name.py
 ```
 
-### Bước 4: Sử dụng Giao diện
-1.  **Điền thông tin:** Nhập đầy đủ thông tin Login, Mật khẩu, Server cho cả hai tài khoản Master và Slave.
-2.  **Tạo Profile:** Đặt một tên cho cấu hình của bạn (ví dụ: "Copy từ A sang B") và nhấn **Lưu**.
-3.  **Tùy chỉnh Rủi ro:** Điều chỉnh các thông số trong khung "Quản lý Rủi ro" theo ý muốn.
-4.  **Bắt đầu:** Nhấn nút **"Bắt đầu Bot"**. Nhật ký sẽ bắt đầu chạy và Dashboard sẽ cập nhật trạng thái.
+### Step 4: Using the Interface
 
-## ⚠️ Lưu ý Quan trọng
-* Phần mềm MetaTrader 5 **bắt buộc phải đang chạy** trên máy tính thì bot mới có thể kết nối.
-* Luôn **thử nghiệm trên tài khoản Demo** trước khi sử dụng trên tài khoản thật.
-* Sử dụng công cụ với rủi ro của riêng bạn. Tác giả không chịu trách nhiệm cho bất kỳ tổn thất tài chính nào.
+1.  **Fill in Details:** Enter the Login, Password, and Server for both the Master and Slave accounts.
+2.  **Create a Profile:** Give your configuration a name (e.g., "My Main Copy Setup") and click **Save**.
+3.  **Customize Risk:** Adjust the parameters in the "Risk Management" panel to your preference.
+4.  **Start Trading:** Click the **"Start Bot"** button. The status log will begin updating, and the dashboard will display live account data.
+
+## ⚠️ Important Disclaimer
+
+  * The MetaTrader 5 desktop software **must be running** on the same machine for the bot to connect.
+  * Always **test thoroughly on a demo account** before using on a live account.
+  * This tool is provided as-is. You are solely responsible for your own trading decisions and any potential financial losses.
